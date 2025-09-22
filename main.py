@@ -33,17 +33,15 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return auth.create_user(db=db, user=user)
 
 @app.get("/users/me/", response_model=schemas.User)
-def read_users_me(current_user: schemas.User = Depends(auth.get_current_active_user)):
+def read_users_me(current_user: schemas.User = Depends(auth.get_current_user)):
     return current_user
 
 @app.post("/articles/", response_model=schemas.NewsArticle, status_code=status.HTTP_201_CREATED)
 def create_article(
     article: schemas.NewsArticleCreate,
     db: Session = Depends(get_db),
-    current_user: schemas.User = Depends(auth.get_current_active_user)
+    current_user: schemas.User = Depends(auth.get_current_user)
 ):
-    # For simplicity, we'll assign the current user as the author.
-    # In a real app, you might handle authoring differently.
     return auth.create_news_article(db=db, article=article, author_id=current_user.id)
 
 @app.get("/articles/", response_model=List[schemas.NewsArticle])
