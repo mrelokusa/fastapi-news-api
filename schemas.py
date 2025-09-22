@@ -1,7 +1,7 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
-# Pydantic models for News Articles
+# --- NewsArticle Schemas ---
 class NewsArticleBase(BaseModel):
     title: str
     content: str
@@ -14,24 +14,27 @@ class NewsArticle(NewsArticleBase):
     author_id: int
 
     class Config:
-        orm_mode = True
+        # Corrected from 'orm_mode' to 'from_attributes' for Pydantic V2
+        from_attributes = True
 
-# Pydantic models for Users
+# --- User Schemas ---
 class UserBase(BaseModel):
     email: str
 
 class UserCreate(UserBase):
     password: str
 
-class User(UserBase):
+class User(BaseModel):
     id: int
+    email: str
     is_active: bool
-    articles: list[NewsArticle] = []
+    articles: List[NewsArticle] = []
 
     class Config:
-        orm_mode = True
+        # Corrected from 'orm_mode' to 'from_attributes' for Pydantic V2
+        from_attributes = True
 
-# Pydantic models for Authentication
+# --- Token Schemas ---
 class Token(BaseModel):
     access_token: str
     token_type: str
