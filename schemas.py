@@ -1,7 +1,7 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Optional
 
-# News Article Schemas
+# Pydantic models for News Articles
 class NewsArticleBase(BaseModel):
     title: str
     content: str
@@ -11,31 +11,31 @@ class NewsArticleCreate(NewsArticleBase):
 
 class NewsArticle(NewsArticleBase):
     id: int
-    owner_id: int
+    author_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
-# User Schemas
+# Pydantic models for Users
 class UserBase(BaseModel):
     email: str
 
 class UserCreate(UserBase):
     password: str
-    is_admin: Optional[bool] = False
 
 class User(UserBase):
     id: int
-    is_admin: bool
-    articles: List[NewsArticle] = []
+    is_active: bool
+    articles: list[NewsArticle] = []
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
-# Auth Schemas
+# Pydantic models for Authentication
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
